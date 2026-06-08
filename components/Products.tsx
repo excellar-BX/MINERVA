@@ -5,11 +5,13 @@ import Link from "next/link";
 import {ShoppingCart, ArrowUpRight, Star} from "lucide-react";
 import {products} from "@/data";
 import {useEffect, useRef, useState} from "react";
+import { useCart } from "@/context/CartContext";
 
 export default function Products() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [addedId, setAddedId] = useState<number | null>(null);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,8 +24,9 @@ export default function Products() {
     return () => observer.disconnect();
   }, []);
 
-  const handleAddToCart = (productId: number) => {
-    setAddedId(productId);
+  const handleAddToCart = (product: typeof products[0]) => {
+    setAddedId(product.id);
+    addToCart(product);
     setTimeout(() => setAddedId(null), 1500);
   };
 
@@ -93,7 +96,7 @@ export default function Products() {
 
                 {/* Cart button — always visible on mobile, hover-reveal on desktop */}
                 <button
-                  onClick={() => handleAddToCart(product.id)}
+                  onClick={() => handleAddToCart(product)}
                   className={`absolute top-3 right-3 md:top-4 md:right-4 rounded-full p-2.5 md:p-3 shadow-lg transition-all duration-300 ${
                     addedId === product.id
                       ? "bg-green-500 scale-110 text-white"

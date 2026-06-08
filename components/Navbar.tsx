@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, ShoppingCart, MessageCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -16,11 +17,9 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { cartCount, setIsOpen } = useCart();
 
-  // Only the homepage has a dark hero — all other pages have light backgrounds
   const isHomePage = pathname === "/";
-
-  // On non-home pages, treat as already "scrolled" so dark bg shows immediately
   const isDark = isHomePage ? scrolled : true;
 
   useEffect(() => {
@@ -31,7 +30,9 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   return (
@@ -43,8 +44,8 @@ export default function Navbar() {
             : "bg-transparent py-5"
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Left links */}
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+          {/* ── Left links (desktop only) ──────────────── */}
           <ul className="hidden md:flex items-center gap-8">
             {navLinks.slice(0, 2).map((link) => (
               <li key={link.href}>
@@ -59,10 +60,10 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Logo */}
+          {/* ── Logo (centered on desktop, left on mobile) ── */}
           <Link
             href="/"
-            className="text-2xl font-bold tracking-[0.3em] text-white uppercase absolute left-1/2 -translate-x-1/2"
+            className="text-xl sm:text-2xl font-bold tracking-[0.3em] text-white uppercase md:absolute md:left-1/2 md:-translate-x-1/2"
           >
             <span className="relative">
               MINERVA
@@ -70,7 +71,7 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Right links + CTA */}
+          {/* ── Right side (desktop) ──────────────────── */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.slice(2).map((link) => (
               <Link
@@ -82,6 +83,18 @@ export default function Navbar() {
                 <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-[#B33A2A] transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
+            <button
+              onClick={() => setIsOpen(true)}
+              className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 transition-all duration-300"
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-4 h-4 text-white" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#B33A2A] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
             <Link
               href="/contact"
               className="group relative overflow-hidden bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg"
@@ -95,25 +108,56 @@ export default function Navbar() {
             <button
               className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 transition-all duration-300"
               onClick={() => setOpen(true)}
+              aria-label="Open menu"
             >
               <Menu className="w-4 h-4 text-white" />
             </button>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            className="md:hidden text-white z-50 relative"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* ── Right side (mobile) ───────────────────── */}
+          <div className="md:hidden flex items-center gap-2">
+            {/* Cart button */}
+            <button
+              onClick={() => setIsOpen(true)}
+              className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 active:scale-95 transition-all duration-300"
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-4 h-4 text-white" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#B33A2A] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Contact (icon-only) */}
+            <Link
+              href="/contact"
+              className="bg-[#B33A2A] hover:bg-[#922e21] active:scale-95 rounded-full p-2.5 transition-all duration-300"
+              aria-label="Contact us"
+            >
+              <MessageCircle className="w-4 h-4 text-white" />
+            </Link>
+
+            {/* Menu toggle */}
+            <button
+              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 active:scale-95 transition-all duration-300 z-50 relative"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+            >
+              {open ? (
+                <X className="w-4 h-4 text-white" />
+              ) : (
+                <Menu className="w-4 h-4 text-white" />
+              )}
+            </button>
+          </div>
         </nav>
       </header>
 
-      {/* Full-screen Mobile Menu */}
+      {/* ── Full-screen Mobile Menu ─────────────────────── */}
       <div
-        className={`fixed inset-0 z-40 transition-all duration-700 ${
+        className={`fixed inset-0 z-40 transition-all duration-700 md:hidden ${
           open ? "visible" : "invisible"
         }`}
       >
@@ -124,9 +168,10 @@ export default function Navbar() {
           }`}
           onClick={() => setOpen(false)}
         />
+
         {/* Menu Content */}
         <div
-          className={`relative z-10 flex flex-col justify-center items-center min-h-screen transition-all duration-700 ${
+          className={`relative z-10 flex flex-col justify-center items-center min-h-screen px-6 transition-all duration-700 ${
             open ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >
@@ -134,7 +179,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-white text-4xl md:text-6xl font-bold py-4 relative group"
+              className="text-white text-4xl sm:text-5xl font-bold py-3 relative group"
               onClick={() => setOpen(false)}
               style={{
                 transitionDelay: open ? `${i * 100 + 200}ms` : "0ms",
@@ -149,9 +194,10 @@ export default function Navbar() {
               <span className="absolute bottom-2 left-0 w-0 h-1 bg-[#B33A2A] group-hover:w-full transition-all duration-500" />
             </Link>
           ))}
+
           <Link
             href="/contact"
-            className="mt-10 bg-[#B33A2A] hover:bg-[#922e21] text-white text-sm font-semibold px-10 py-4 rounded-full transition-all duration-300"
+            className="mt-10 bg-[#B33A2A] hover:bg-[#922e21] text-white text-sm font-semibold px-10 py-4 rounded-full transition-all duration-300 flex items-center gap-2"
             onClick={() => setOpen(false)}
             style={{
               transitionDelay: open ? "600ms" : "0ms",
@@ -161,6 +207,7 @@ export default function Navbar() {
             }}
           >
             Book Appointment
+            <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
