@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { Trash2, Lock, CreditCard, Truck } from "lucide-react";
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
   const [form, setForm] = useState({
     firstName: "",
@@ -22,9 +24,8 @@ export default function CheckoutPage() {
     cardCvc: "",
   });
   const [loading, setLoading] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -35,40 +36,15 @@ export default function CheckoutPage() {
     // Simulate order processing
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    setOrderPlaced(true);
     clearCart();
-    setLoading(false);
+    router.push("/order-confirmation");
   };
 
-  if (cart.length === 0 && !orderPlaced) {
+  if (cart.length === 0) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h1>
-          <Link
-            href="/store"
-            className="inline-flex items-center gap-2 bg-[#B33A2A] hover:bg-[#922e21] text-white font-semibold px-6 py-3 rounded-full transition-all"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (orderPlaced) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center max-w-md px-6">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Order Confirmed!</h1>
-          <p className="text-gray-600 mb-8">
-            Thank you for your purchase. You will receive a confirmation email shortly.
-          </p>
           <Link
             href="/store"
             className="inline-flex items-center gap-2 bg-[#B33A2A] hover:bg-[#922e21] text-white font-semibold px-6 py-3 rounded-full transition-all"

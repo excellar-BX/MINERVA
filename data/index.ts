@@ -49,6 +49,54 @@ export const products = [
     price: 48,
     image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=300&q=80",
   },
+  {
+    id: 5,
+    name: "Hair Serum Argan",
+    price: 35,
+    image: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?w=300&q=80",
+  },
+  {
+    id: 6,
+    name: "Shampoo Pro",
+    price: 42,
+    image: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=300&q=80",
+  },
+  {
+    id: 7,
+    name: "Hair Mask Deep",
+    price: 58,
+    image: "https://images.unsplash.com/photo-1599305090598-fe179d501227?w=300&q=80",
+  },
+  {
+    id: 8,
+    name: "Styling Gel",
+    price: 28,
+    image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=300&q=80",
+  },
+  {
+    id: 9,
+    name: "Hair Spray Strong",
+    price: 32,
+    image: "https://images.unsplash.com/photo-1556227702-d1e4e7b5c232?w=300&q=80",
+  },
+  {
+    id: 10,
+    name: "Hair Oil Treatment",
+    price: 45,
+    image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=300&q=80",
+  },
+  {
+    id: 11,
+    name: "Curl Cream",
+    price: 38,
+    image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300&q=80",
+  },
+  {
+    id: 12,
+    name: "Scalp Scrub",
+    price: 40,
+    image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&q=80",
+  },
 ];
 
 export const team = [
