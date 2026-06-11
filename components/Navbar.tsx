@@ -63,7 +63,7 @@ export default function Navbar() {
           {/* ── Logo (centered on desktop, left on mobile) ── */}
           <Link
             href="/"
-            className="text-xl sm:text-2xl font-bold tracking-[0.3em] text-white uppercase md:absolute md:left-1/2 md:-translate-x-1/2"
+            className="text-xl sm:text-2xl font-bold tracking-[0.3em] text-white uppercase md:absolute md:left-1/2 md:-translate-x-1/2 z-50 relative"
           >
             <span className="relative">
               MINERVA
@@ -105,18 +105,23 @@ export default function Navbar() {
               </span>
               <span className="absolute inset-0 bg-[#B33A2A] translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-full" />
             </Link>
+            
+            {/* FIXED DESKTOP TOGGLE BUTTON */}
             <button
-              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 transition-all duration-300"
-              onClick={() => setOpen(true)}
-              aria-label="Open menu"
+              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 transition-all duration-300 z-50 relative"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
             >
-              <Menu className="w-4 h-4 text-white" />
+              {open ? (
+                <X className="w-4 h-4 text-white" />
+              ) : (
+                <Menu className="w-4 h-4 text-white" />
+              )}
             </button>
           </div>
 
           {/* ── Right side (mobile) ───────────────────── */}
           <div className="md:hidden flex items-center gap-2">
-            {/* Cart button */}
             <button
               onClick={() => setIsOpen(true)}
               className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 active:scale-95 transition-all duration-300"
@@ -130,7 +135,6 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Contact (icon-only) */}
             <Link
               href="/contact"
               className="bg-[#B33A2A] hover:bg-[#922e21] active:scale-95 rounded-full p-2.5 transition-all duration-300"
@@ -139,7 +143,6 @@ export default function Navbar() {
               <MessageCircle className="w-4 h-4 text-white" />
             </Link>
 
-            {/* Menu toggle */}
             <button
               className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2.5 hover:bg-white/20 active:scale-95 transition-all duration-300 z-50 relative"
               onClick={() => setOpen(!open)}
@@ -155,10 +158,11 @@ export default function Navbar() {
         </nav>
       </header>
 
-      {/* ── Full-screen Mobile Menu ─────────────────────── */}
+      {/* ── Full-screen Menu ─────────────────────── */}
+      {/* FIXED: Removed md:hidden from this wrapper so it can show on all devices */}
       <div
-        className={`fixed inset-0 z-40 transition-all duration-700 md:hidden ${
-          open ? "visible" : "invisible"
+        className={`fixed inset-0 z-40 transition-all duration-700 ${
+          open ? "visible pointer-events-auto" : "invisible pointer-events-none"
         }`}
       >
         {/* Backdrop */}
